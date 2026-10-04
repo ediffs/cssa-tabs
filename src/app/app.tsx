@@ -1,24 +1,22 @@
-import logo from "/logo.svg";
 import "./app.css";
-import AllTabs from "../components/all-tabs";
+import { useSession } from "../useSession.ts";
+import PayTab from "../components/tab-pay.tsx";
 
-// hook onto the canteen system by getting the tab from a tabProvider
-function App({ tab }: { tab: number }) {
-  tab = 9.99; // temporary... 4 testing
+// flow #1: POS home -> choose to "manage tab" -> redirect to home page (this one)
+function App() {
+  const { user } = useSession();
+  const canManage = user?.role === "supervisor" || user?.role === "admin";
 
+ // NOTE we will need to add a button to return to the POS from here
   return (
     <>
-      <div>
-        <a href="https://umanitobacssa.ca/" target="_blank">
-          <img src={logo} className="logo" alt="UManitoba CSSA logo" />
-        </a>
-      </div>
       <h1>Lounge Tab System</h1>
-      <h2>Confirm adding ${tab} CAD</h2>
-      <AllTabs tab={tab}></AllTabs>
-      <p>
-        You can't add to your tab if it will become greater than $50.00 CAD.
-      </p>
+      <PayTab onSuccess={() => (window.location.href = "/confirm")} />
+      {canManage && (
+        <button onClick={() => (window.location.href = "/management")}>
+          View All Tabs
+        </button>
+      )}
       <p className="read-the-docs">Created by the CSSA.</p>
     </>
   );

@@ -1,73 +1,66 @@
-# React + TypeScript + Vite
+# CSSA Lounge Tab/POS System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React + TypeScript point-of-sale and tab tracking application built for the CSSA Lounge, using the [Tesselate POS SDK](https://github.com/tessellatepos/sdk).
 
-Currently, two official plugins are available:
+## Prerequisites
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+* **Node.js**: `v22.0.0` or higher
+* **npm**: `v10.0.0` or higher
 
-## React Compiler
+## Getting Started
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 1. Clone the Repository
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Clone the project along with its Git submodules:
+```bash
+git clone --recursive https://github.com/umanitoba-cssa/cssa-lounge-system
+cd cssa-lounge-system
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+**Note:** If you already cloned without `--recursive`, initialize the submodule manually:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+git submodule update --init --recursive
 ```
+
+### 2. Install Dependencies
+
+Install Node.js packages with
+
+```bash
+npm install
+```
+
+Install [Docker](https://www.docker.com/) or [Docker Desktop](https://www.docker.com/products/docker-desktop/). Docker Desktop gives a full GUI and will be a bit easier to use if you aren't familiar with Docker, and is required for Windows development.
+
+### 3. Development Server
+
+Build the plugin and start the local Tessellate storefront, backend, and database:
+
+```bash
+npm run dev
+```
+
+The development command runs Docker Compose through WSL, so WSL and Docker must be installed and Docker must be available inside the WSL distribution. The storefront is available at [http://localhost:5173](http://localhost:5173). The plugin is loaded by the storefront; it is not served as a standalone Vite page. Plugin client changes require another `npm run build` and a browser refresh.
+
+To stop the stack, press `Ctrl+C`. To remove the containers afterward, run:
+
+```bash
+docker compose down
+```
+
+For local configuration of the separate Express API service, copy `.env.example` into `.env`. That service is not part of the Tessellate plugin development stack.
+
+To start the Tessellate stack without rebuilding:
+
+```bash
+docker compose up
+```
+
+## Available Scripts
+
+
+* `npm run dev` - Build the plugin and start the local Tessellate stack
+* `npm run build` - Compile TypeScript types and build production assets
+* `npm run preview` - Preview the production build locally
+* `npm run lint` - Run ESLint across application source files
